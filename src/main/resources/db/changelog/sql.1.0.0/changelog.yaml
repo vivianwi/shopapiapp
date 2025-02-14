@@ -1,0 +1,4 @@
+databaseChangeLog:
+  - include:
+      file: create_product_table.sql
+      relativeToChangelogFile: true
