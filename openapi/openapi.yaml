@@ -1,0 +1,66 @@
+openapi: 3.0.2
+info:
+  title: Shop API
+  description: API для магазина
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+    description: Локальный сервер
+
+paths:
+  /products:
+    get:
+      summary: Получить список товаров
+      operationId: getProducts
+      tags:
+        - Product
+      responses:
+        "200":
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Product"
+
+    post:
+      summary: Добавить новый товар
+      operationId: createProduct
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Product"
+      responses:
+        "201":
+          description: Товар создан
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        category:
+          type: string
+        price:
+          type: number
+          format: float
+        available_stock:
+          type: integer
+        last_update_date:
+          type: string
+          format: date-time
+        supplier_id:
+          type: string
+          format: uuid
+        image_id:
+          type: string
+          format: uuid
