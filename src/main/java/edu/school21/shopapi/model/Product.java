@@ -2,8 +2,7 @@ package edu.school21.shopapi.model;
 
 import edu.school21.shopapi.model.baseEntity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -13,6 +12,9 @@ import java.time.Instant;
 @Getter
 @Setter
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "product", schema = "shopapp")
 public class Product extends BaseEntity {
     @Column(name = "name", nullable = false)
@@ -26,9 +28,6 @@ public class Product extends BaseEntity {
 
     @Column(name = "available_stock", nullable = false)
     private Integer availableStock;
-
-    @Column(name = "last_update_date")
-    private Instant lastUpdateDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.SET_NULL)

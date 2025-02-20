@@ -25,7 +25,7 @@ public class Client extends BaseEntity {
     @Column(name = "birthday", nullable = false)
     private LocalDate birthday;
 
-    @Column(name = "gender", nullable = false, length = Integer.MAX_VALUE)
+    @Column(columnDefinition = "CHAR(1)")
     private String gender;
 
     @Column(name = "registration_date")

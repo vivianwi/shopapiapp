@@ -23,24 +23,26 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Product"
+                  $ref: "#/components/schemas/ProductDto"
 
     post:
       summary: Добавить новый товар
       operationId: createProduct
+      tags:
+        - Product
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Product"
+              $ref: "#/components/schemas/ProductDto"
       responses:
         "201":
           description: Товар создан
 
 components:
   schemas:
-    Product:
+    ProductDto:
       type: object
       properties:
         id:
@@ -52,15 +54,21 @@ components:
           type: string
         price:
           type: number
-          format: float
+          format: big-decimal
         available_stock:
           type: integer
-        last_update_date:
-          type: string
-          format: date-time
         supplier_id:
           type: string
           format: uuid
-        image_id:
+        image:
+          $ref: "#/components/schemas/Image"
+
+    Image:
+      type: object
+      properties:
+        id:
           type: string
           format: uuid
+        image:
+          type: string
+          format: byte

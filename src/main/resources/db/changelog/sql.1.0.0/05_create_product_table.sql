@@ -10,7 +10,6 @@ CREATE TABLE product
     category         VARCHAR(255)   NOT NULL,
     price            DECIMAL(12, 2) NOT NULL,
     available_stock  INT            NOT NULL DEFAULT 0,
-    last_update_date TIMESTAMP               DEFAULT CURRENT_TIMESTAMP,
     supplier_id      UUID REFERENCES supplier(id) ON DELETE SET NULL,
     image_id         UUID REFERENCES images(id) ON DELETE SET NULL,
     created_at TIMESTAMP WITH TIME ZONE,
