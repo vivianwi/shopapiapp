@@ -17,6 +17,10 @@ public interface CommonMapper {
         return localDateTime == null ? null : OffsetDateTime.of(localDateTime, ZoneOffset.UTC);
     }
 
+    default LocalDateTime toLocalDateTime(OffsetDateTime offsetDateTime) {
+        return offsetDateTime == null ? null : offsetDateTime.toLocalDateTime();
+    }
+
     default String uuidToString(UUID uuid) {
         return uuid == null ? null : uuid.toString();
     }

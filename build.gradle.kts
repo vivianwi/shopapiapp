@@ -32,7 +32,7 @@ repositories {
 
 openApiGenerate {
     generatorName.set("spring")
-    inputSpec.set("$rootDir/openapi/openapi.yaml")
+    inputSpec.set("$rootDir/src/main/resources/static/openapi.yaml")
     val generatedDir = layout.buildDirectory.dir("generated")
     outputDir.set(generatedDir.map { it.asFile.absolutePath })
 
@@ -48,7 +48,8 @@ openApiGenerate {
             "defaultInterfaces" to "true",
             "useSpringBoot3" to "true",
             "useResponseEntity" to "false",
-            "skipDefaultInterface" to "true"
+            "skipDefaultInterface" to "true",
+            "generateExamples" to "true"
         )
     )
 }
@@ -91,6 +92,7 @@ dependencies {
     implementation("jakarta.validation:jakarta.validation-api:3.0.2")
     implementation("jakarta.annotation:jakarta.annotation-api:2.1.1")
     implementation("org.openapitools:jackson-databind-nullable:0.2.6")
+    implementation("org.webjars:swagger-ui:5.10.3")
 
     liquibaseRuntime("org.liquibase:liquibase-core:4.23.1")
     liquibaseRuntime("info.picocli:picocli:4.7.5")

@@ -18,7 +18,16 @@ spring:
     properties:
       hibernate:
         format_sql: true
-
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+    groups:
+      enabled: true
+  swagger-ui:
+    urls:
+      - name: My OpenAPI
+        url: /openapi.yaml
 
 logging:
   level:

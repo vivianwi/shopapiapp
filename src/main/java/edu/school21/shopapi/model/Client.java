@@ -28,9 +28,6 @@ public class Client extends BaseEntity {
     @Column(columnDefinition = "CHAR(1)")
     private String gender;
 
-    @Column(name = "registration_date")
-    private Instant registrationDate;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.SET_NULL)
     @JoinColumn(name = "address_id")

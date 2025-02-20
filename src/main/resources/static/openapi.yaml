@@ -1,0 +1,512 @@
+openapi: 3.0.2
+info:
+  title: Shop API
+  description: API для магазина
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Локальный сервер
+
+paths:
+  /api/v1/clients:
+    post:
+      summary: Добавить нового клиента
+      operationId: createClient
+      tags:
+        - Client
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClientDto"
+            examples:
+              simpleClient:
+                summary: Пример простого клиента
+                value:
+                  client_name: "John"
+                  client_surname: "Wick"
+                  birthday: "2004-08-21"
+                  gender: "M"
+                  address_id: "d36fa28e-61f2-4e7a-8c88-c4f3e8a6c957"
+              anotherClient:
+                summary: Пример другого клиента
+                value:
+                  client_name: "Jane"
+                  client_surname: "Doe"
+                  birthday: "1988-12-31"
+                  gender: "F"
+                  address_id: "f6eabcc7-4ad4-4c8b-92a3-cf7c25dc7ec9"
+
+      responses:
+        "201":
+          description: Клиент создан
+        "400":
+          description: Неверный запрос
+
+    delete:
+      summary: Удалить клиента по ID
+      operationId: deleteClient
+      tags:
+        - Client
+      parameters:
+        - in: query
+          name: clientId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: Клиент удалён
+        "404":
+          description: Клиент не найден
+
+    get:
+      summary: Получить клиентов
+      operationId: getClients
+      tags:
+        - Client
+      parameters:
+        - in: query
+          name: clientName
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: clientSurname
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Список клиентов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ClientDto"
+        "404":
+          description: Клиенты не найдены
+
+    patch:
+      summary: Изменить адрес клиента
+      operationId: updateClientAddress
+      tags:
+        - Client
+      parameters:
+        - in: path
+          name: clientId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddressDto"
+      responses:
+        "200":
+          description: Адрес клиента обновлён
+        "404":
+          description: Клиент не найден
+
+  /api/v1/products:
+    post:
+      summary: Добавить новый товар
+      operationId: createProduct
+      tags:
+        - Product
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProductDto"
+      responses:
+        "201":
+          description: Товар создан
+
+    get:
+      summary: Получить товар по ID
+      operationId: getProductById
+      tags:
+        - Product
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Товар найден
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ProductDto"
+        "404":
+          description: Товар не найден
+
+    put:
+      summary: Уменьшить количество товара
+      operationId: decreaseProductStock
+      tags:
+        - Product
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                decreaseAmount:
+                  type: integer
+      responses:
+        "200":
+          description: Количество товара обновлено
+        "404":
+          description: Товар не найден
+
+    delete:
+      summary: Удалить товар по ID
+      operationId: deleteProduct
+      tags:
+        - Product
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: Товар удалён
+        "404":
+          description: Товар не найден
+
+  /api/v1/suppliers:
+    post:
+      summary: Добавить нового поставщика
+      operationId: createSupplier
+      tags:
+        - Supplier
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SupplierDto"
+      responses:
+        "201":
+          description: Поставщик создан
+
+    get:
+      summary: Получить всех поставщиков
+      operationId: getSuppliers
+      tags:
+        - Supplier
+      responses:
+        "200":
+          description: Список поставщиков
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SupplierDto"
+
+  /api/v1/suppliers/{supplierId}:
+    get:
+      summary: Получить поставщика по ID
+      operationId: getSupplierById
+      tags:
+        - Supplier
+      parameters:
+        - in: path
+          name: supplierId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Поставщик найден
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SupplierDto"
+        "404":
+          description: Поставщик не найден
+
+    patch:
+      summary: Изменить адрес поставщика
+      operationId: updateSupplierAddress
+      tags:
+        - Supplier
+      parameters:
+        - in: path
+          name: supplierId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddressDto"
+      responses:
+        "200":
+          description: Адрес поставщика обновлён
+        "404":
+          description: Поставщик не найден
+
+    delete:
+      summary: Удалить поставщика по ID
+      operationId: deleteSupplier
+      tags:
+        - Supplier
+      parameters:
+        - in: path
+          name: supplierId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: Поставщик удалён
+        "404":
+          description: Поставщик не найден
+
+  /api/v1/images:
+    post:
+      summary: Добавить изображение
+      operationId: addImage
+      tags:
+        - Image
+      parameters:
+        - in: query
+          name: productId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+      responses:
+        "201":
+          description: Изображение добавлено
+
+    get:
+      summary: Получить изображение товара по ID товара
+      operationId: getImageByProductId
+      tags:
+        - Image
+      parameters:
+        - in: path
+          name: productId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Изображение найдено
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        "404":
+          description: Изображение не найдено
+
+    put:
+      summary: Изменить изображение товара
+      operationId: updateImage
+      tags:
+        - Image
+      parameters:
+        - in: path
+          name: imageId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: string
+              format: byte
+      responses:
+        "200":
+          description: Изображение обновлено
+        "404":
+          description: Изображение не найдено
+
+    delete:
+      summary: Удалить изображение по ID
+      operationId: deleteImage
+      tags:
+        - Image
+      parameters:
+        - in: path
+          name: imageId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: Изображение удалено
+        "404":
+          description: Изображение не найдено
+
+components:
+  schemas:
+    ProductDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        category:
+          type: string
+        price:
+          type: number
+          format: decimal
+        available_stock:
+          type: integer
+        supplier_id:
+          type: string
+          format: uuid
+        image:
+          $ref: "#/components/schemas/ImageDto"
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+
+
+    ImageDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        image:
+          type: string
+          format: byte
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+
+
+    ClientDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        client_name:
+          type: string
+        client_surname:
+          type: string
+        birthday:
+          type: string
+          format: date
+        gender:
+          type: string
+          enum:
+            - M
+            - F
+        address_id:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+
+
+    AddressDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        country:
+          type: string
+        city:
+          type: string
+        street:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+
+
+    SupplierDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        phone_number:
+          type: string
+        address_id:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+          readOnly: true
+        updatedAt:
+          type: string
+          format: date-time
+          readOnly: true
+
