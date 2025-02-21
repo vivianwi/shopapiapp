@@ -7,8 +7,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -16,14 +14,11 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     private final ProductRepository productRepository;
-
     private final ProductMapper productMapper;
 
     public void save(ProductDto product) {
         productRepository.save(productMapper.toEntity(product));
     }
 
-    public List<ProductDto> findAll() {
-        return productRepository.findAll().stream().map(productMapper::toDto).collect(Collectors.toList());
-    }
+
 }

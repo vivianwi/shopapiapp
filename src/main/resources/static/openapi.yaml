@@ -5,7 +5,7 @@ info:
   version: 1.0.0
 
 servers:
-  - url: http://localhost:8080/api/v1
+  - url: http://localhost:8080
     description: Локальный сервер
 
 paths:
@@ -29,7 +29,10 @@ paths:
                   client_surname: "Wick"
                   birthday: "2004-08-21"
                   gender: "M"
-                  address_id: "d36fa28e-61f2-4e7a-8c88-c4f3e8a6c957"
+                  address:
+                    country: "USA"
+                    city: "New York"
+                    street: "5th Avenue, 10"
               anotherClient:
                 summary: Пример другого клиента
                 value:
@@ -37,13 +40,22 @@ paths:
                   client_surname: "Doe"
                   birthday: "1988-12-31"
                   gender: "F"
-                  address_id: "f6eabcc7-4ad4-4c8b-92a3-cf7c25dc7ec9"
+                  address:
+                    country: "Canada"
+                    city: "Toronto"
+                    street: "Queen St W, 15"
 
       responses:
         "201":
           description: Клиент создан
         "400":
           description: Неверный запрос
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+          description: Ошибка создания
 
     delete:
       summary: Удалить клиента по ID
@@ -62,26 +74,31 @@ paths:
           description: Клиент удалён
         "404":
           description: Клиент не найден
-
     get:
-      summary: Получить клиентов
+      summary: Получить всех клиентов (с поддержкой пагинации)
       operationId: getClients
       tags:
         - Client
       parameters:
         - in: query
-          name: clientName
+          name: limit
           required: false
           schema:
-            type: string
+            type: integer
+            minimum: 1
+            example: 10
+          description: Количество клиентов на странице (пагинация)
         - in: query
-          name: clientSurname
+          name: offset
           required: false
           schema:
-            type: string
+            type: integer
+            minimum: 0
+            example: 20
+          description: Смещение от начала списка (пагинация)
       responses:
         "200":
-          description: Список клиентов
+          description: Список всех клиентов
           content:
             application/json:
               schema:
@@ -90,6 +107,7 @@ paths:
                   $ref: "#/components/schemas/ClientDto"
         "404":
           description: Клиенты не найдены
+
 
     patch:
       summary: Изменить адрес клиента
@@ -114,6 +132,35 @@ paths:
           description: Адрес клиента обновлён
         "404":
           description: Клиент не найден
+
+  /api/v1/clients/search:
+    get:
+      summary: Поиск клиентов по имени и фамилии
+      operationId: searchClients
+      tags:
+        - Client
+      parameters:
+        - in: query
+          name: clientName
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: clientSurname
+          required: false
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Найденные клиенты
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ClientDto"
+        "404":
+          description: Клиенты не найдены
 
   /api/v1/products:
     post:
@@ -165,15 +212,10 @@ paths:
           schema:
             type: string
             format: uuid
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                decreaseAmount:
-                  type: integer
+        - in: query
+          name: decreaseAmount
+          schema:
+            type: integer
       responses:
         "200":
           description: Количество товара обновлено
@@ -384,6 +426,59 @@ paths:
         "404":
           description: Изображение не найдено
 
+  /api/v1/address:
+    post:
+      summary: Создать новый адрес
+      operationId: createAddress
+      tags:
+        - Address
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddressDto"
+            examples:
+              school21:
+                summary: школа 21
+                value:
+                  country: Russia
+                  city: Kazan
+                  street: Spartakovskaya 2k2
+              perm:
+                summary: Пермь
+                value:
+                  country: Russia
+                  city: Perm
+                  street: Mira 80
+      responses:
+        "201":
+          description: "Адрес создан успешно"
+          content:
+            application/json:
+              schema:
+                type: string
+                format: uuid
+        "400":
+          description: "Ошибка запроса"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiErrorResponse"
+    get:
+      summary: Получить все адреса
+      operationId: getAllAddresses
+      tags:
+        - Address
+      responses:
+        "200":
+          description: "Список адресов"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AddressDto"
 components:
   schemas:
     ProductDto:
@@ -453,9 +548,8 @@ components:
           enum:
             - M
             - F
-        address_id:
-          type: string
-          format: uuid
+        address:
+          $ref: "#/components/schemas/AddressDto"
         createdAt:
           type: string
           format: date-time
@@ -472,6 +566,7 @@ components:
         id:
           type: string
           format: uuid
+          readOnly: true
         country:
           type: string
         city:
@@ -509,4 +604,17 @@ components:
           type: string
           format: date-time
           readOnly: true
+
+
+
+    ApiErrorResponse:
+      required:
+        - message
+      type: object
+      properties:
+        message:
+          type: string
+
+
+
 

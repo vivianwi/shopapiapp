@@ -13,7 +13,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-public class ClientResource implements ClientApi {
+public class ClientController implements ClientApi {
 
     private final ClientService clientService;
 
@@ -24,12 +24,17 @@ public class ClientResource implements ClientApi {
 
     @Override
     public void deleteClient(UUID clientId) {
-
+        clientService.delete(clientId);
     }
 
     @Override
-    public List<ClientDto> getClients(String clientName, String clientSurname) {
-        return List.of();
+    public List<ClientDto> getClients(Integer limit, Integer offset) {
+        return clientService.getAllClients(limit, offset);
+    }
+
+    @Override
+    public List<ClientDto> searchClients(String clientName, String clientSurname) {
+        return clientService.getClients(clientName, clientSurname);
     }
 
     @Override

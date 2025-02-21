@@ -1,19 +1,17 @@
 package edu.school21.shopapi.controller;
 
 import edu.school21.openapi.api.ProductApi;
-import edu.school21.openapi.model.DecreaseProductStockRequest;
 import edu.school21.openapi.model.ProductDto;
 import edu.school21.shopapi.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.UUID;
 
 
 @RestController
 @RequiredArgsConstructor
-public class ProductResource implements ProductApi {
+public class ProductController implements ProductApi {
 
     private final ProductService productService;
 
@@ -23,9 +21,10 @@ public class ProductResource implements ProductApi {
     }
 
     @Override
-    public void decreaseProductStock(UUID productId, DecreaseProductStockRequest decreaseProductStockRequest) {
+    public void decreaseProductStock(UUID productId, Integer decreaseAmount) {
 
     }
+
 
     @Override
     public void deleteProduct(UUID productId) {

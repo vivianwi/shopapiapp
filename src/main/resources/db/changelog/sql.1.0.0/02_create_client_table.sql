@@ -10,7 +10,6 @@ CREATE TABLE client
     client_surname    VARCHAR(100)                            NOT NULL,
     birthday          DATE                                    NOT NULL,
     gender            VARCHAR(1) CHECK (gender IN ('M', 'F')) NOT NULL,
-    registration_date TIMESTAMP        DEFAULT CURRENT_TIMESTAMP,
     address_id        UUID                                    REFERENCES address (id) ON DELETE SET NULL,
     created_at        TIMESTAMP WITH TIME ZONE,
     updated_at        TIMESTAMP WITH TIME ZONE
