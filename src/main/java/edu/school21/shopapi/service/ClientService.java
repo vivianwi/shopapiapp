@@ -1,6 +1,7 @@
 package edu.school21.shopapi.service;
 
 
+import edu.school21.openapi.model.AddressDto;
 import edu.school21.openapi.model.ClientDto;
 import edu.school21.shopapi.error.ServiceException;
 import edu.school21.shopapi.mapper.ClientMapper;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,6 +26,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ClientService {
     public final ClientRepository clientRepository;
     public final ClientMapper clientMapper;
@@ -39,11 +42,12 @@ public class ClientService {
     }
 
 
-    //TODO: переделать
-    public List<ClientDto> getAllClients(Integer limit, Integer offset) {
+    public List<ClientDto> getClients(Integer limit, Integer offset) {
         Pageable pageable;
+
         if (limit != null && offset != null) {
-            pageable = PageRequest.of(offset / limit, limit);
+            int page = offset / limit;
+            pageable = PageRequest.of(page, limit);
         } else {
             pageable = Pageable.unpaged();
         }
@@ -54,6 +58,7 @@ public class ClientService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public void save(ClientDto clientDto) {
         Address savedAddress = addressService.save(clientDto.getAddress());
         Client client = clientMapper.toEntity(clientDto);
@@ -66,5 +71,11 @@ public class ClientService {
             throw new ServiceException("Клиент с id" + clientId + " не найден");
         }
         clientRepository.deleteById(clientId);
+    }
+
+    public void updateClientAddress(UUID clientId, AddressDto addressDto) {
+        Client client = clientRepository.findById(clientId)
+                .orElseThrow(() -> new ServiceException("No such client"));
+        addressService.updateAddress(client.getAddress(), addressDto);
     }
 }

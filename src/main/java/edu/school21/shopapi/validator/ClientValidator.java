@@ -1,4 +1,4 @@
-package edu.school21.shopapi;
+package edu.school21.shopapi.validator;
 
 import edu.school21.openapi.model.ClientDto;
 import edu.school21.shopapi.error.ServiceException;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class ClientValidator {
     private final AddressRepository addressRepository;
-
 
     public void validateClient(ClientDto clientDto) {
         checkAddressExistence(clientDto);

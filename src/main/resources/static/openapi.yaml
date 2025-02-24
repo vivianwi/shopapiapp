@@ -80,22 +80,7 @@ paths:
       tags:
         - Client
       parameters:
-        - in: query
-          name: limit
-          required: false
-          schema:
-            type: integer
-            minimum: 1
-            example: 10
-          description: Количество клиентов на странице (пагинация)
-        - in: query
-          name: offset
-          required: false
-          schema:
-            type: integer
-            minimum: 0
-            example: 20
-          description: Смещение от начала списка (пагинация)
+        - $ref: '#/components/parameters/PaginationParams'
       responses:
         "200":
           description: Список всех клиентов
@@ -108,7 +93,7 @@ paths:
         "404":
           description: Клиенты не найдены
 
-
+  /api/v1/clients/{clientId}:
     patch:
       summary: Изменить адрес клиента
       operationId: updateClientAddress
@@ -184,7 +169,7 @@ paths:
       tags:
         - Product
       parameters:
-        - in: path
+        - in: query
           name: productId
           required: true
           schema:
@@ -206,7 +191,7 @@ paths:
       tags:
         - Product
       parameters:
-        - in: path
+        - in: query
           name: productId
           required: true
           schema:
@@ -228,7 +213,7 @@ paths:
       tags:
         - Product
       parameters:
-        - in: path
+        - in: query
           name: productId
           required: true
           schema:
@@ -240,6 +225,24 @@ paths:
         "404":
           description: Товар не найден
 
+
+  /api/v1/products/search:
+    get:
+      summary: Получить всех товаров (с поддержкой пагинации)
+      operationId: getProducts
+      tags:
+        - Product
+      parameters:
+        - $ref: '#/components/parameters/PaginationParams'
+      responses:
+        "200":
+          description: Список всех товаров
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ProductDto"
   /api/v1/suppliers:
     post:
       summary: Добавить нового поставщика
@@ -255,21 +258,6 @@ paths:
       responses:
         "201":
           description: Поставщик создан
-
-    get:
-      summary: Получить всех поставщиков
-      operationId: getSuppliers
-      tags:
-        - Supplier
-      responses:
-        "200":
-          description: Список поставщиков
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/SupplierDto"
 
   /api/v1/suppliers/{supplierId}:
     get:
@@ -335,6 +323,26 @@ paths:
           description: Поставщик удалён
         "404":
           description: Поставщик не найден
+  /api/v1/suppliers/search:
+    get:
+      summary: Поиск поставщиков с помощью пагинации
+      operationId: searchSuppliers
+      tags:
+        - Supplier
+      parameters:
+        - $ref: '#/components/parameters/PaginationParams'
+      responses:
+        "200":
+          description: Список всех поставщиков
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SupplierDto"
+
+
+
 
   /api/v1/images:
     post:
@@ -352,14 +360,104 @@ paths:
       requestBody:
         required: true
         content:
-          application/octet-stream:
+          image/png:
+            schema:
+              type: string
+              format: binary
+          image/jpeg:
             schema:
               type: string
               format: binary
       responses:
         "201":
           description: Изображение добавлено
+    get:
+      summary: Получить все id изображений с пагинацией
+      operationId: getImagesIds
+      tags:
+        - Image
+      parameters:
+        - $ref: '#/components/parameters/PaginationParams'
+      responses:
+        "200":
+          description: Список всех изображений
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ImageDto"
+    put:
+      summary: Изменить изображение товара
+      operationId: updateImage
+      tags:
+        - Image
+      parameters:
+        - name: imageId
+          schema:
+            type: string
+            format: uuid
+          in: query
+          required: true
+      requestBody:
+        required: true
+        content:
+          image/png:
+            schema:
+              type: string
+              format: binary
+          image/jpeg:
+            schema:
+              type: string
+              format: binary
+      responses:
+        "200":
+          description: Изображение обновлено
+        "404":
+          description: Изображение не найдено
 
+    delete:
+      summary: Удалить изображение по ID
+      operationId: deleteImage
+      tags:
+        - Image
+      parameters:
+        - in: query
+          name: imageId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "204":
+          description: Изображение удалено
+        "404":
+          description: Изображение не найдено
+
+  /api/v1/images/{imageId}:
+    get:
+      summary: Получить изображение по ID
+      operationId: getImageById
+      tags:
+        - Image
+      parameters:
+        - in: path
+          name: imageId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Изображение найдено
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+
+
+  /api/v1/images/product/{productId}:
     get:
       summary: Получить изображение товара по ID товара
       operationId: getImageByProductId
@@ -376,54 +474,11 @@ paths:
         "200":
           description: Изображение найдено
           content:
-            application/octet-stream:
+            image/png:
               schema:
                 type: string
                 format: binary
-        "404":
-          description: Изображение не найдено
-
-    put:
-      summary: Изменить изображение товара
-      operationId: updateImage
-      tags:
-        - Image
-      parameters:
-        - in: path
-          name: imageId
-          required: true
-          schema:
-            type: string
-            format: uuid
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: string
-              format: byte
-      responses:
-        "200":
-          description: Изображение обновлено
-        "404":
-          description: Изображение не найдено
-
-    delete:
-      summary: Удалить изображение по ID
-      operationId: deleteImage
-      tags:
-        - Image
-      parameters:
-        - in: path
-          name: imageId
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        "204":
-          description: Изображение удалено
-        "404":
+        "400":
           description: Изображение не найдено
 
   /api/v1/address:
@@ -465,21 +520,48 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiErrorResponse"
+
     get:
       summary: Получить все адреса
-      operationId: getAllAddresses
+      operationId: getAddresses
       tags:
         - Address
+      parameters:
+        - $ref: '#/components/parameters/PaginationParams'
       responses:
         "200":
-          description: "Список адресов"
+          description: Список всех адресов
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: "#/components/schemas/AddressDto"
+        "404":
+          description: Клиенты не найдены
 components:
+  parameters:
+    PaginationParams:
+      in: query
+      name: pagination
+      required: false
+      description: Параметры пагинации (лимит и смещение)
+      schema:
+        type: object
+        properties:
+          limit:
+            type: integer
+            minimum: 1
+            example: 10
+            description: Количество объектов на странице
+          offset:
+            type: integer
+            minimum: 0
+            example: 0
+            description: Смещение (от начала списка)
+        x-className: CustomPaginationParameter
+
+
   schemas:
     ProductDto:
       type: object
@@ -499,8 +581,9 @@ components:
         supplier_id:
           type: string
           format: uuid
-        image:
-          $ref: "#/components/schemas/ImageDto"
+        imageId:
+          type: string
+          format: uuid
         createdAt:
           type: string
           format: date-time
@@ -586,16 +669,12 @@ components:
     SupplierDto:
       type: object
       properties:
-        id:
-          type: string
-          format: uuid
         name:
           type: string
         phone_number:
           type: string
-        address_id:
-          type: string
-          format: uuid
+        address:
+          $ref: "#/components/schemas/AddressDto"
         createdAt:
           type: string
           format: date-time

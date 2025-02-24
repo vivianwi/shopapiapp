@@ -2,6 +2,7 @@ package edu.school21.shopapi.controller;
 
 import edu.school21.openapi.api.AddressApi;
 import edu.school21.openapi.model.AddressDto;
+import edu.school21.openapi.model.GetClientsPaginationParameter;
 import edu.school21.shopapi.service.AddressService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,7 +24,8 @@ public class AddressController implements AddressApi {
     }
 
     @Override
-    public List<AddressDto> getAllAddresses() {
-        return List.of();
+    public List<AddressDto> getAddresses(GetClientsPaginationParameter pagination) {
+        return addressService.getAddresses(pagination.getOffset(), pagination.getLimit());
     }
+
 }

@@ -28,8 +28,13 @@ springdoc:
     urls:
       - name: My OpenAPI
         url: /openapi.yaml
-
 logging:
   level:
+    org.springframework.arm.jpa: DEBUG
+    org.springframework.transaction: DEBUG
     "org.hibernate": warn
     "org.hibernate.orm.connections.pooling": warn
+    org:
+      springframework=ERROR:
+    edu:
+      school21=ERROR:

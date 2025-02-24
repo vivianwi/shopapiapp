@@ -75,10 +75,11 @@ liquibase {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
     implementation("org.springframework.boot:spring-boot-starter-logging")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.mapstruct:mapstruct:1.5.5.Final")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
     annotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
     testAnnotationProcessor("org.mapstruct:mapstruct-processor:1.5.5.Final")
     annotationProcessor("org.projectlombok:lombok-mapstruct-binding:0.2.0")
@@ -92,12 +93,12 @@ dependencies {
     implementation("jakarta.validation:jakarta.validation-api:3.0.2")
     implementation("jakarta.annotation:jakarta.annotation-api:2.1.1")
     implementation("org.openapitools:jackson-databind-nullable:0.2.6")
-    implementation("org.webjars:swagger-ui:5.10.3")
 
     liquibaseRuntime("org.liquibase:liquibase-core:4.23.1")
     liquibaseRuntime("info.picocli:picocli:4.7.5")
     liquibaseRuntime("org.postgresql:postgresql:42.7.2")
 }
+
 
 tasks.named("build") {
     dependsOn("openApiGenerate")
