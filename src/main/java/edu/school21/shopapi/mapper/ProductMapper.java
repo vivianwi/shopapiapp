@@ -26,7 +26,6 @@ public interface ProductMapper {
 
     @Mapping(target = "image", ignore = true)
     @Mapping(target = "name", source = "dto.name")
-    @Mapping(target = "createdAt", ignore = true)
     Product toEntity(ProductDto dto, Supplier supplier);
 
     @Mapping(target = "supplier", ignore = true)
