@@ -1,9 +1,7 @@
-@file:Suppress("DEPRECATION")
-
 plugins {
     java
     idea
-    id("org.springframework.boot") version "3.4.2"
+    id("org.springframework.boot") version "3.2.0"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.liquibase.gradle") version "2.2.0"
     id("org.openapi.generator") version "7.0.0"
@@ -16,7 +14,7 @@ sourceSets["main"].java.srcDir("$buildDir/generated/src/main/java")
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion.set(JavaLanguageVersion.of(17))
     }
 }
 
