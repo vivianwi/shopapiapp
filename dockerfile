@@ -1,22 +1,18 @@
-FROM openjdk:17-jdk-slim AS build
+FROM openjdk:17-jdk-slim AS app
 WORKDIR /app
-
 COPY build.gradle.kts settings.gradle.kts ./
 COPY gradle/ gradle/
-COPY gradlew .
-RUN ./gradlew --no-daemon dependencies
+COPY gradlew ./
+COPY wait-for-it.sh ./
+RUN chmod +x wait-for-it.sh
+RUN chmod +x gradlew && ./gradlew --no-daemon dependencies
 COPY . .
-RUN mkdir -p /root/.gradle && \
-    chmod -R 777 /root/.gradle && \
-    ./gradlew clean build -x test
+RUN mkdir -p /root/.gradle && chmod -R 777 /root/.gradle
 
-    
-FROM liquibase/liquibase:latest
-COPY ./src/main/resources/db/changelog /db/changelog
-
-FROM openjdk:17-jdk-slim
-COPY --from=build /app/build/libs/*.jar app.jar
-
-
-EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+FROM liquibase/liquibase:latest AS liquibase
+WORKDIR /liquibase
+COPY /src/main/resources/db db
+USER root
+COPY wait-for-it.sh ./
+RUN chmod +x wait-for-it.sh
+COPY ./src/main/resources/db/changelog /db/changelog:rw

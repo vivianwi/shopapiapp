@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://db:5432/shopapi
+    url: jdbc:postgresql://db:5433/shopapi
     username: shopuser
     password: shoppass
     driver-class-name: org.postgresql.Driver
