@@ -15,7 +15,7 @@
 
 ### Стандарты:
 - API реализовано в стиле RESTful.
-- Документация Swagger доступна по адресу: `http://localhost:8080/swagger/index.html`.
+- Документация Swagger доступна по адресу: `http://localhost:8082/swagger/index.html`.
 - Все запросы и ответы соответствуют спецификации OpenAPI.
 
 ### Технологии:
@@ -78,7 +78,7 @@
    ```bash
    docker-compose up --build
    ```
-- Документация будет доступна по ссылке `http://localhost:8080/swagger/index.html`
+- Документация будет доступна по ссылке `http://localhost:8082/swagger/index.html`
 
 #### Если при запуске возникли проблемы, попробуйте выполнить следующие шаги:
    ```bash

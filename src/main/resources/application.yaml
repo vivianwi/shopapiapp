@@ -39,3 +39,6 @@ logging:
       springframework=ERROR:
     edu:
       school21=ERROR:
+server:
+  port: ${SERVER_PORT:8082}
+
