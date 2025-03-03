@@ -1,7 +1,7 @@
 plugins {
     java
     idea
-    id("org.springframework.boot") version "3.2.0"
+    id("org.springframework.boot") version "3.2.3"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.liquibase.gradle") version "2.2.0"
     id("org.openapi.generator") version "7.0.0"
@@ -71,9 +71,10 @@ liquibase {
     runList = "main"
 }
 
+
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.4")
     implementation("org.springframework.boot:spring-boot-starter-logging")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.mapstruct:mapstruct:1.5.5.Final")
